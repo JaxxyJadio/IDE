@@ -9,3 +9,4 @@ pub mod frontend;
 
 // Re-exports for convenience
 pub use frontend::*;
+pub use backend::*;

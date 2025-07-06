@@ -1,2 +1,2 @@
-// Editor UI components
-pub mod editor;
+// Code Editor UI components
+pub mod code_editor;

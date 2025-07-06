@@ -1,13 +1,27 @@
 # Jadio IDE
 
-A Rust application using [egui](https://github.com/emilk/egui) for a modern, extensible IDE experience.
+Jadio IDE is a modern, extensible Integrated Development Environment (IDE) built in Rust using [egui](https://github.com/emilk/egui) for a fast, native, and highly modular user experience. It is designed to empower developers with advanced code intelligence, plugin support, and a rich set of built-in tools for code editing, project management, and automation.
+
+## Features
+
+- **Modular Backend and Frontend:** Clean separation of logic and UI, making it easy to extend and maintain.
+- **Code Agent System:** Integrates AI-powered code assistance, context-aware suggestions, and automation tools.
+- **Plugin Architecture:** Easily add or develop plugins to extend IDE functionality.
+- **Integrated Terminal:** Run shell commands and scripts directly within the IDE.
+- **Project Explorer:** Navigate and manage files and folders efficiently.
+- **Script Runner:** Execute and manage scripts with ease.
+- **Customizable Panels:** Activity bars, status bars, and menus for a tailored workflow.
+- **Rust/egui Foundation:** Fast, cross-platform, and open source.
 
 ## Project Structure
 
 ```
 Cargo.lock
 Cargo.toml
+.gitignore
 readme.md
+.vscode/
+    tasks.json
 src/
     backend/
         mod.rs
@@ -27,8 +41,22 @@ src/
             model_loader.rs
             server_logic.rs
             instructions/
+                agent_instruction_logic.rs
+                instructions.yaml
             memory/
+                agent_memory_logic.rs
+                memory.yaml
             tools/
+                base/
+                    agent_tools.yaml
+                    docstring_audit.rs
+                    document.rs
+                    lint.rs
+                    parse.rs
+                plugins/
+                    agent_plugins.yaml
+                tool_sets/
+                    toolset1.yaml
         code_editor/
             backup.rs
             code_editor_logic.rs
@@ -38,9 +66,13 @@ src/
             dropdown_menu_logic.rs
         explorer_bar/
             explorer_bar_logic.rs
+        file_system/
+            file_system_logic.rs
         other_logic/
             debug/
+                debug_logic.rs
             llm_cli_helper/
+                llm_cli_helper_logic.rs
         plugin_control/
             plugin_control_logic.rs
         script_runner/
@@ -65,54 +97,78 @@ src/
         code_agent_ui/
             codeagent.rs
             codeagentactivitybar.rs
-        editor_ui/
-            editor.rs
+            mod.rs
+        code_editor_ui/
+            code_editor.rs
+            mod.rs
         explorer_ui/
             explorer.rs
             exploreractivitybar.rs
+            mod.rs
         icons/
         other_window_ui/
             ai_settings_ui/
+                aisettings.rs
+                mod.rs
             help_panel_ui/
+                help.rs
+                mod.rs
             plugin_panel_ui/
+                pluginpanel.rs
+                mod.rs
             script_runner_ui/
+                scriptrunner.rs
+                mod.rs
             server_panel_ui/
+                serverpanel.rs
+                mod.rs
             settings_panel_ui/
+                settings_panel.rs
+                mod.rs
         shell_terminal_ui/
             shell_terminal.rs
+            mod.rs
         status_bar_ui/
             statusbar.rs
+            mod.rs
         top_menu_bar_ui/
             dropdownmenu.rs
             searchbar.rs
             specialbuttonsbar.rs
+            mod.rs
 target/
     CACHEDIR.TAG
     debug/
+        .cargo-lock
         jadio_ide.d
         jadio_ide.exe
         jadio_ide.pdb
         build/
-            ...
         deps/
-            ...
         examples/
+        fingerprint/
         incremental/
+        ...
 ```
 
 ## Getting Started
 
-1. **Build and Run:**
+1. **Install Rust:**
+   - Get the Rust toolchain from [rustup.rs](https://rustup.rs)
+2. **Build and Run:**
    ```sh
    cargo run
    ```
-2. **Requirements:**
-   - Rust toolchain (https://rustup.rs)
+3. **Open in VS Code:**
+   - Recommended: Use the provided VS Code tasks for easy build/run.
 
-## Features
-- Modular backend and frontend
-- Extensible code agent and plugin system
-- Integrated terminal, explorer, and script runner
+## Contributing
+
+Contributions are welcome! Please open issues or pull requests for bug fixes, new features, or suggestions. See the code for module-level documentation and comments.
+
+## License
+
+This project is open source and available under the MIT License.
 
 ---
 
