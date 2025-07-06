@@ -1,7 +1,3 @@
-It looks like you're creating a GitHub README for your Jadio IDE! This is a great starting point, and I can definitely help you refine it for a public repository.
-
-Here's a structured and enhanced GitHub README based on the information you provided, designed to be clear, engaging, and encourage adoption and contributions:
-
 Jadio IDE
 Jadio IDE is a fast, lightweight, and highly customizable native Rust IDE built with egui. Designed for developers who value performance and a tailored workflow, Jadio offers an integrated AI Code Agent for smarter coding without the bloat of Electron or other heavy runtimes.
 
