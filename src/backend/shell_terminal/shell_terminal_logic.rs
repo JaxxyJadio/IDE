@@ -154,10 +154,9 @@ impl TerminalHandler {
                 message_type: MessageType::Input,
                 timestamp: chrono::Utc::now(),
             };
-            self.add_message(message);
-
-            // Send to process
+            // Send to process first, then add to history to avoid borrow conflict
             sender.send(command)?;
+            self.add_message(message);
             Ok(())
         } else {
             Err("No active shell process".into())
@@ -217,10 +216,14 @@ impl TerminalHandler {
 
     pub fn update(&mut self) {
         // Process any new messages from the shell
+        let mut messages = Vec::new();
         if let Some(ref receiver) = self.output_receiver {
             while let Ok(message) = receiver.try_recv() {
-                self.add_message(message);
+                messages.push(message);
             }
+        }
+        for message in messages {
+            self.add_message(message);
         }
     }
 

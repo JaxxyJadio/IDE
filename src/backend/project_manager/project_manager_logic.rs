@@ -1,7 +1,13 @@
+// WHAT I WANT: Project management logic for Jadio IDE, including detection, creation, opening, and settings for various project types.
+// WHAT IT DOES: Handles project lifecycle, type detection, file scaffolding, and project-specific settings for Rust, Python, JS/TS, HTML, and mixed projects.
+// TODO: Implement persistent project settings, project migration, and advanced detection heuristics.
+// FIXME: Handle edge cases for file permissions, partial/corrupt projects, and cross-platform issues.
+
 use std::path::{Path, PathBuf};
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
+/// Represents a user project in the IDE.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
     pub name: String,
@@ -11,6 +17,7 @@ pub struct Project {
     pub settings: ProjectSettings,
 }
 
+/// Supported project types for detection and scaffolding.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ProjectType {
     Rust,
@@ -22,6 +29,7 @@ pub enum ProjectType {
     Unknown,
 }
 
+/// Per-project settings (formatting, AI, linting, etc.)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProjectSettings {
     pub auto_save: bool,
@@ -33,6 +41,7 @@ pub struct ProjectSettings {
     pub enable_ai_assistance: bool,
 }
 
+/// Supported line ending styles.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum LineEndings {
     Unix,    // LF
@@ -41,6 +50,7 @@ pub enum LineEndings {
 }
 
 impl Default for ProjectSettings {
+    /// Returns default project settings.
     fn default() -> Self {
         Self {
             auto_save: true,
@@ -58,6 +68,7 @@ impl Default for ProjectSettings {
     }
 }
 
+/// Manages project lifecycle, detection, and scaffolding.
 pub struct ProjectManager {
     current_project: Option<Project>,
     recent_projects: Vec<Project>,
@@ -71,6 +82,7 @@ impl Default for ProjectManager {
 }
 
 impl ProjectManager {
+    /// Create a new ProjectManager instance.
     pub fn new() -> Self {
         Self {
             current_project: None,
@@ -79,6 +91,7 @@ impl ProjectManager {
         }
     }
 
+    /// Detect the type of project in a given directory.
     pub fn detect_project_type<P: AsRef<Path>>(path: P) -> ProjectType {
         let path = path.as_ref();
         
@@ -146,6 +159,7 @@ impl ProjectManager {
         ProjectType::Unknown
     }
 
+    /// Open a project at the given path, updating recent projects and cache.
     pub fn open_project<P: AsRef<Path>>(&mut self, path: P) -> Result<(), Box<dyn std::error::Error>> {
         let path = path.as_ref().to_path_buf();
         
@@ -180,18 +194,22 @@ impl ProjectManager {
         Ok(())
     }
 
+    /// Close the current project.
     pub fn close_project(&mut self) {
         self.current_project = None;
     }
 
+    /// Get a reference to the current project, if any.
     pub fn get_current_project(&self) -> Option<&Project> {
         self.current_project.as_ref()
     }
 
+    /// Get a slice of recent projects.
     pub fn get_recent_projects(&self) -> &[Project] {
         &self.recent_projects
     }
 
+    /// Create a new project of the given type, scaffolding files as needed.
     pub fn create_new_project<P: AsRef<Path>>(
         &mut self, 
         path: P, 
@@ -233,6 +251,7 @@ impl ProjectManager {
         Ok(())
     }
 
+    /// Scaffold a new Rust project (Cargo.toml, src/main.rs).
     fn create_rust_project(&self, path: &Path, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Create Cargo.toml
         let cargo_toml = format!(
@@ -256,6 +275,7 @@ edition = "2021"
         Ok(())
     }
 
+    /// Scaffold a new Python project (main.py, requirements.txt, README.md).
     fn create_python_project(&self, path: &Path, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Create main.py
         std::fs::write(
@@ -275,6 +295,7 @@ edition = "2021"
         Ok(())
     }
 
+    /// Scaffold a new JavaScript project (package.json, index.js).
     fn create_javascript_project(&self, path: &Path, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Create package.json
         let package_json = format!(
@@ -301,6 +322,7 @@ r#"{{
         Ok(())
     }
 
+    /// Scaffold a new TypeScript project (package.json, tsconfig.json, src/index.ts).
     fn create_typescript_project(&self, path: &Path, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         self.create_javascript_project(path, name)?;
         
@@ -352,6 +374,7 @@ r#"{{
         Ok(())
     }
 
+    /// Scaffold a new HTML project (index.html, style.css, script.js).
     fn create_html_project(&self, path: &Path, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Create index.html
         let html = format!(
@@ -398,10 +421,10 @@ p {
             path.join("script.js"),
             "console.log('Hello, web world!');\n\n// Your JavaScript code here\n"
         )?;
-        
         Ok(())
     }
 
+    /// Save current project settings (TODO: persist to disk).
     pub fn save_project_settings(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         if let Some(project) = &self.current_project {
             // TODO: Implement saving project settings to .jadio/project.json
@@ -411,7 +434,8 @@ p {
         Ok(())
     }
 
-    pub fn load_project_settings<P: AsRef<Path>>(&mut self, path: P) -> Result<ProjectSettings, Box<dyn std::error::Error>> {
+    /// Load project settings from disk (TODO: implement real loading).
+    pub fn load_project_settings<P: AsRef<Path>>(&mut self, _path: P) -> Result<ProjectSettings, Box<dyn std::error::Error>> {
         // TODO: Implement loading project settings from .jadio/project.json
         // For now, return default settings
         Ok(ProjectSettings::default())

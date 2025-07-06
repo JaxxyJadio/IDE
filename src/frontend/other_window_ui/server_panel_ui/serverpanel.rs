@@ -43,7 +43,15 @@ struct ServerTemplate {
 
 impl ServerPanel {
     pub fn new() -> Self {
-        let mut panel = Self::default();
+        let mut panel = ServerPanel {
+            servers: Vec::new(),
+            server_templates: HashMap::new(),
+            show_new_server_dialog: false,
+            new_server_name: String::new(),
+            new_server_port: String::new(),
+            new_server_command: String::new(),
+            selected_template: None,
+        };
         panel.init_templates();
         panel.init_servers();
         panel
@@ -165,7 +173,12 @@ impl ServerPanel {
             // For now, simulate starting
             server.status = ServerStatus::Running;
             server.start_time = Some(chrono::Utc::now());
-            server.pid = Some(rand::random::<u32>() % 10000 + 1000);
+            // Use a simple cast from u64 to u32 for pseudo-random PID
+            let pid = (std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos() % (u32::MAX as u128)) as u32;
+            server.pid = Some(pid % 10000 + 1000);
             server.logs.push(format!("✅ Server started on port {}", server.port));
         }
     }
@@ -214,34 +227,34 @@ impl ServerPanel {
 
         // Server list
         egui::ScrollArea::vertical().show(ui, |ui| {
-            for (i, server) in self.servers.iter().enumerate() {
+            // Collect actions to perform after UI loop
+            let mut actions: Vec<(usize, &'static str)> = Vec::new();
+            // Collect server info for UI rendering
+            let _server_count = self.servers.len();
+            let servers_snapshot: Vec<_> = self.servers.iter().cloned().collect();
+            for (i, server) in servers_snapshot.iter().enumerate() {
                 ui.group(|ui| {
                     ui.horizontal(|ui| {
                         // Status indicator
                         let status_icon = self.get_status_icon(&server.status);
                         let status_color = self.get_status_color(&server.status);
                         ui.colored_label(status_color, status_icon);
-
                         // Server info
                         ui.vertical(|ui| {
                             ui.horizontal(|ui| {
                                 ui.strong(&server.name);
                                 ui.label(format!(":{}", server.port));
-                                
                                 if let Some(pid) = server.pid {
                                     ui.small(format!("PID: {}", pid));
                                 }
                             });
-
                             ui.small(&server.command);
-
                             if let Some(start_time) = server.start_time {
                                 let uptime = chrono::Utc::now() - start_time;
                                 ui.small(format!("Uptime: {}m {}s", 
                                     uptime.num_minutes(), 
                                     uptime.num_seconds() % 60));
                             }
-
                             match &server.status {
                                 ServerStatus::Error(msg) => {
                                     ui.colored_label(egui::Color32::RED, format!("Error: {}", msg));
@@ -249,21 +262,20 @@ impl ServerPanel {
                                 _ => {}
                             }
                         });
-
                         // Control buttons
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             match server.status {
                                 ServerStatus::Stopped | ServerStatus::Error(_) => {
                                     if ui.button("▶ Start").clicked() {
-                                        self.start_server(i);
+                                        actions.push((i, "start"));
                                     }
                                 }
                                 ServerStatus::Running => {
                                     if ui.button("⏹ Stop").clicked() {
-                                        self.stop_server(i);
+                                        actions.push((i, "stop"));
                                     }
                                     if ui.button("🔄 Restart").clicked() {
-                                        self.restart_server(i);
+                                        actions.push((i, "restart"));
                                     }
                                     if ui.button("🌐").on_hover_text("Open in Browser").clicked() {
                                         // TODO: Open URL in browser
@@ -274,10 +286,11 @@ impl ServerPanel {
                                     ui.label("Processing...");
                                 }
                             }
-
                             // Settings menu
                             ui.menu_button("⚙", |ui| {
-                                ui.checkbox(&mut server.auto_restart.clone(), "Auto-restart");
+                                // Note: auto_restart is not updated in snapshot, so this is view-only
+                                let _ = server.auto_restart;
+                                ui.checkbox(&mut false, "Auto-restart");
                                 if ui.button("Edit").clicked() {
                                     // TODO: Edit server configuration
                                 }
@@ -290,22 +303,28 @@ impl ServerPanel {
                             });
                         });
                     });
-
                     // Show recent logs
                     if !server.logs.is_empty() {
                         ui.separator();
                         ui.collapsing("Recent Logs", |ui| {
                             let recent_logs: Vec<_> = server.logs.iter().rev().take(5).collect();
                             for log in recent_logs.iter().rev() {
-                                ui.small(log);
+                                ui.small(log.as_str());
                             }
                         });
                     }
                 });
-
                 ui.add_space(5.0);
             }
-
+            // Process actions after the UI loop to avoid borrow checker issues
+            for (i, act) in actions {
+                match act {
+                    "start" => self.start_server(i),
+                    "stop" => self.stop_server(i),
+                    "restart" => self.restart_server(i),
+                    _ => {}
+                }
+            }
             if self.servers.is_empty() {
                 ui.centered_and_justified(|ui| {
                     ui.vertical_centered(|ui| {
@@ -394,12 +413,6 @@ impl ServerPanel {
                     });
                 });
         }
-    }
-}
-
-impl Default for ServerPanel {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

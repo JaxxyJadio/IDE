@@ -1,7 +1,7 @@
 use eframe::egui;
 
 pub fn configure_fonts(ctx: &egui::Context) {
-    let mut fonts = egui::FontDefinitions::default();
+    let fonts = egui::FontDefinitions::default();
     
     // Add custom fonts here if needed
     

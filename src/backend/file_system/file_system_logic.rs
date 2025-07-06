@@ -127,9 +127,9 @@ impl FileSystem {
             None
         }
     }
-}file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+
+    pub fn create_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
         fs::File::create(path)?;
         Ok(())
     }
-
-    pub fn create_
+}

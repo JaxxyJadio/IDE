@@ -193,9 +193,3 @@ impl Editor {
         });
     }
 }
-
-impl Default for Editor {
-    fn default() -> Self {
-        Self::new()
-    }
-}

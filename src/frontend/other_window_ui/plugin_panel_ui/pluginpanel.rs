@@ -135,9 +135,3 @@ impl PluginPanel {
         });
     }
 }
-
-impl Default for PluginPanel {
-    fn default() -> Self {
-        Self::new()
-    }
-}

@@ -1,3 +1,5 @@
+// Add submodules here as needed for other_window_ui
+
 // Other window UI components
 pub mod ai_settings_ui;
 pub mod help_panel_ui;
