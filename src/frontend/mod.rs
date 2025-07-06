@@ -1,29 +1,26 @@
-// C:\JadioAI\IDE\src\mod.rs
-// Module organization for JadioAI IDE
-
-// Backend logic modules
-pub mod backend;
+// C:\JadioAI\IDE\src\frontend\mod.rs
+// Frontend UI module organization for JadioAI IDE
 
 // UI Panel modules
-pub mod codeagent;
-pub mod codeagentactivitybar;
-pub mod dropdownmenu;
-pub mod editor;
-pub mod explorer;
-pub mod exploreractivitybar;
-pub mod searchbar;
-pub mod specialbuttonsbar;
-pub mod statusbar;
-pub mod terminal;
+pub mod code_agent_ui;
+pub mod editor_ui;
+pub mod explorer_ui;
+pub mod other_window_ui;
+pub mod shell_terminal_ui;
+pub mod status_bar_ui;
+pub mod top_menu_bar_ui;
 
-// Re-export for easier imports
-pub use codeagent::CodeAgent;
-pub use codeagentactivitybar::CodeAgentActivityBar;
-pub use dropdownmenu::DropdownMenu;
-pub use editor::Editor;
-pub use explorer::Explorer;
-pub use exploreractivitybar::ExplorerActivityBar;
-pub use searchbar::SearchBar;
-pub use specialbuttonsbar::SpecialButtonsBar;
-pub use statusbar::StatusBar;
-pub use terminal::Terminal;
+// Style module
+pub mod style;
+
+// Re-export main UI components for easier imports
+pub use code_agent_ui::codeagent::CodeAgent;
+pub use code_agent_ui::codeagentactivitybar::CodeAgentActivityBar;
+pub use editor_ui::editor::Editor;
+pub use explorer_ui::explorer::Explorer;
+pub use explorer_ui::exploreractivitybar::ExplorerActivityBar;
+pub use shell_terminal_ui::shell_terminal::Terminal;
+pub use status_bar_ui::statusbar::StatusBar;
+pub use top_menu_bar_ui::dropdownmenu::DropdownMenu;
+pub use top_menu_bar_ui::searchbar::SearchBar;
+pub use top_menu_bar_ui::specialbuttonsbar::SpecialButtonsBar;
