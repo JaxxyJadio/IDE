@@ -1,0 +1,29 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDE
+.idea/
+*.iml
+
+# Backup files
+*~
+
+# Byproducts
+*.d
+*.pdb
+*.exe
+
+# Misc
+CACHEDIR.TAG
