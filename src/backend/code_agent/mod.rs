@@ -1,0 +1,13 @@
+pub mod agent;
+pub mod agent_server_logic;
+pub mod autoprompt;
+pub mod chat;
+pub mod code_agent_logic;
+pub mod context;
+pub mod files_changed;
+pub mod hot_swapper;
+pub mod lazy_loader;
+pub mod model_loader;
+pub mod instructions;
+pub mod memory;
+pub mod tools;

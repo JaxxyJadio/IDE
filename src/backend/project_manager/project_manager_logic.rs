@@ -397,29 +397,12 @@ r#"<!DOCTYPE html>
         std::fs::write(path.join("index.html"), html)?;
         
         // Create style.css
-        let css = r#"body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f0f0;
-}
-
-h1 {
-    color: #333;
-    text-align: center;
-}
-
-p {
-    text-align: center;
-    font-size: 18px;
-}
-"#;
+        let css = "body {\n    font-family: Arial, sans-serif;\n    margin: 0;\n    padding: 20px;\n    background-color: #f0f0f0;\n}\nh1 { color: #333; text-align: center; }\np { text-align: center; font-size: 18px; }\n";
         std::fs::write(path.join("style.css"), css)?;
-        
         // Create script.js
         std::fs::write(
             path.join("script.js"),
-            "console.log('Hello, web world!');\n\n// Your JavaScript code here\n"
+            "console.log('Hello, web world!');\n"
         )?;
         Ok(())
     }
