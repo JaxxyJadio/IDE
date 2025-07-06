@@ -1,154 +1,169 @@
 # Jadio IDE
 
-Jadio IDE is a modern, extensible Integrated Development Environment (IDE) built in Rust using [egui](https://github.com/emilk/egui) for a fast, native, and highly modular user experience. It is designed to empower developers with advanced code intelligence, plugin support, and a rich set of built-in tools for code editing, project management, and automation.
+Jadio IDE is a modern, extensible Integrated Development Environment (IDE) built in Rust using [egui](https://github.com/emilk/egui) for a fast, native, and highly modular user experience. It empowers developers with advanced code intelligence, plugin support, and a rich set of built-in tools for code editing, project management, and automation.
 
 ## Features
 
-- **Modular Backend and Frontend:** Clean separation of logic and UI, making it easy to extend and maintain.
-- **Code Agent System:** Integrates AI-powered code assistance, context-aware suggestions, and automation tools.
-- **Plugin Architecture:** Easily add or develop plugins to extend IDE functionality.
+- **Modular Backend and Frontend:** Clean separation of logic and UI for easy extension and maintenance.
+- **Code Agent System:** AI-powered code assistance, context-aware suggestions, and automation tools.
+- **Plugin Architecture:** Add or develop plugins to extend IDE functionality.
 - **Integrated Terminal:** Run shell commands and scripts directly within the IDE.
 - **Project Explorer:** Navigate and manage files and folders efficiently.
-- **Script Runner:** Execute and manage scripts with ease.
+- **Script Runner:** Configure, execute, and manage scripts with shortcuts and buttons.
 - **Customizable Panels:** Activity bars, status bars, and menus for a tailored workflow.
+- **Special Buttons:** 5 configurable shortcut buttons for any action.
+- **Status Bar:** Bottom bar showing git status, settings, and more.
+- **Search Bar:** VS Code-style top-center search for fast navigation.
 - **Rust/egui Foundation:** Fast, cross-platform, and open source.
 
 ## Project Structure
 
 ```
-Cargo.lock
-Cargo.toml
-.gitignore
-readme.md
-.vscode/
-    tasks.json
 src/
-    backend/
+  main.rs
+  mod.rs
+  backend/
+    mod.rs
+    activity_bar_left/
+      mod.rs
+      activity_bar_left_logic.rs
+    activity_bar_right/
+      mod.rs
+      activity_bar_right_logic.rs
+    code_agent/
+      mod.rs
+      agent.rs
+      agent_server_logic.rs
+      autoprompt.rs
+      chat.rs
+      code_agent_logic.rs
+      context.rs
+      files_changed.rs
+      hot_swapper.rs
+      lazy_loader.rs
+      model_loader.rs
+      instructions/
         mod.rs
-        activity_bar_left/
-            activity_bar_left_logic.rs
-        activity_bar_right/
-            activity_bar_right_logic.rs
-        code_agent/
-            agent.rs
-            autoprompt.rs
-            chat.rs
-            code_agent_logic.rs
-            context.rs
-            files_changed.rs
-            hot_swapper.rs
-            lazy_loader.rs
-            model_loader.rs
-            server_logic.rs
-            instructions/
-                agent_instruction_logic.rs
-                instructions.yaml
-            memory/
-                agent_memory_logic.rs
-                memory.yaml
-            tools/
-                base/
-                    agent_tools.yaml
-                    docstring_audit.rs
-                    document.rs
-                    lint.rs
-                    parse.rs
-                plugins/
-                    agent_plugins.yaml
-                tool_sets/
-                    toolset1.yaml
-        code_editor/
-            backup.rs
-            code_editor_logic.rs
-            saving.rs
-            syntax_highlighting.rs
-        dropdown_menu/
-            dropdown_menu_logic.rs
-        explorer_bar/
-            explorer_bar_logic.rs
-        file_system/
-            file_system_logic.rs
-        other_logic/
-            debug/
-                debug_logic.rs
-            llm_cli_helper/
-                llm_cli_helper_logic.rs
-        plugin_control/
-            plugin_control_logic.rs
-        script_runner/
-            script_runner_logic.rs
-        search_bar/
-            search_bar_logic.rs
-        server/
-            server_logic.rs
-            server_port_logic.rs
-        shell_terminal/
-            shell_terminal_list_logic.rs
-            shell_terminal_logic.rs
-            shell_terminal_menu_logic.rs
-        special_buttons/
-            special_buttons_logic.rs
-        status_bar/
-            status_bar_logic.rs
-    frontend/
-        main.rs
+        agent_instruction_logic.rs
+        instructions.yaml
+      memory/
         mod.rs
-        style.rs
-        code_agent_ui/
-            codeagent.rs
-            codeagentactivitybar.rs
-            mod.rs
-        code_editor_ui/
-            code_editor.rs
-            mod.rs
-        explorer_ui/
-            explorer.rs
-            exploreractivitybar.rs
-            mod.rs
-        icons/
-        other_window_ui/
-            ai_settings_ui/
-                aisettings.rs
-                mod.rs
-            help_panel_ui/
-                help.rs
-                mod.rs
-            plugin_panel_ui/
-                pluginpanel.rs
-                mod.rs
-            script_runner_ui/
-                scriptrunner.rs
-                mod.rs
-            server_panel_ui/
-                serverpanel.rs
-                mod.rs
-            settings_panel_ui/
-                settings_panel.rs
-                mod.rs
-        shell_terminal_ui/
-            shell_terminal.rs
-            mod.rs
-        status_bar_ui/
-            statusbar.rs
-            mod.rs
-        top_menu_bar_ui/
-            dropdownmenu.rs
-            searchbar.rs
-            specialbuttonsbar.rs
-            mod.rs
-target/
-    CACHEDIR.TAG
-    debug/
-        .cargo-lock
-        jadio_ide.d
-        jadio_ide.exe
-        jadio_ide.pdb
-        build/
-        deps/
-        examples/
-        fingerprint/
-        incremental/
-        ...
+        agent_memory_logic.rs
+        memory.yaml
+      tools/
+        mod.rs
+        base/
+          mod.rs
+          agent_tools.yaml
+          docstring_audit.rs
+          document.rs
+          lint.rs
+          parse.rs
+          parse_test.rs
+        plugins/
+          mod.rs
+          agent_plugins.yaml
+        tool_sets/
+          mod.rs
+          toolset1.yaml
+    code_editor/
+      mod.rs
+      code_editor_logic.rs
+      syntax_highlighting.rs
+      saving.rs
+      backup.rs
+    dropdown_menu/
+      mod.rs
+      dropdown_menu_logic.rs
+    explorer_bar/
+      mod.rs
+      explorer_bar_logic.rs
+    file_system/
+      mod.rs
+      file_system_logic.rs
+    other_logic/
+      debug/
+      llm_cli_helper/
+    plugin_control/
+      mod.rs
+      plugin_control_logic.rs
+    project_manager/
+      mod.rs
+      project_manager_logic.rs
+    script_runner/
+      mod.rs
+      script_runner_logic.rs
+    search_bar/
+      mod.rs
+      search_bar_logic.rs
+    server/
+      mod.rs
+      server_logic.rs
+      server_port_logic.rs
+    settings_manager/
+      mod.rs
+      settings_manager_logic.rs
+    shell_terminal/
+      mod.rs
+      shell_terminal_list_logic.rs
+      shell_terminal_logic.rs
+      shell_terminal_menu_logic.rs
+    special_buttons/
+      mod.rs
+      special_buttons_logic.rs
+    status_bar/
+      mod.rs
+      status_bar_logic.rs
+  frontend/
+    main.rs
+    mod.rs
+    style.rs
+    code_agent_ui/
+      mod.rs
+      codeagent.rs
+      codeagentactivitybar.rs
+    code_editor_ui/
+      mod.rs
+      code_editor.rs
+    explorer_ui/
+      mod.rs
+      file_explorer.rs
+      file_explorer_activity_bar.rs
+    icons/
+    other_window_ui/
+      mod.rs
+      ai_settings_ui/
+        mod.rs
+        aisettings.rs
+      help_panel_ui/
+        mod.rs
+        help.rs
+      plugin_panel_ui/
+        mod.rs
+        pluginpanel.rs
+      script_runner_ui/
+        mod.rs
+        scriptrunner.rs
+      server_panel_ui/
+        mod.rs
+        serverpanel.rs
+      settings_panel_ui/
+        mod.rs
+        settings_panel.rs
+    shell_terminal_ui/
+      mod.rs
+      shell_terminal.rs
+    status_bar_ui/
+      mod.rs
+      statusbar.rs
+    top_menu_bar_ui/
+      mod.rs
+      dropdownmenu.rs
+      searchbar.rs
+      specialbuttonsbar.rs
+Cargo.toml
+Cargo.lock
+readme.md
 ```
 
 ## Getting Started
@@ -164,7 +179,7 @@ target/
 
 ## Contributing
 
-Contributions are welcome! Please open issues or pull requests for bug fixes, new features, or suggestions. See the code for module-level documentation and comments.
+Contributions are welcome! Please open issues or pull requests for bug fixes, new features, or suggestions.
 
 ## License
 
